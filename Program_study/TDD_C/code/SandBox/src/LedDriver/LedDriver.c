@@ -17,8 +17,6 @@
 /*- ------------------------------------------------------------------ -*/
 
 #include "LedDriver.h"
-#include "RuntimeError.h"
-
 #include <stdlib.h>
 #include <memory.h>
 

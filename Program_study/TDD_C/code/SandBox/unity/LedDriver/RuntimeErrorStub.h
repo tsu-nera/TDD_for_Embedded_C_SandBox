@@ -8,10 +8,8 @@
 #ifndef RUNTIMEERRORSTUB_H_
 #define RUNTIMEERRORSTUB_H_
 
-#include "../include/util/RuntimeError.h"
-
 void RuntimeErrorStub_Reset(void);
-const char* RuntimeErrorStub_GetLastError(void);
+const char * RuntimeErrorStub_GetLastError(void);
 int RuntimeErrorStub_GetLastParameter(void);
 
 #endif /* RUNTIMEERRORSTUB_H_ */

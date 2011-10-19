@@ -16,9 +16,9 @@
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
 
+#include "unity_fixture.h"
 #include "LedDriver.h"
-#include "../include/util/RuntimeError.h"
-#include "../mocks/RuntimeErrorStub.h"
+#include "RuntimeErrorStub.h"
 
 TEST_GROUP(LedDriver);
 
@@ -112,8 +112,14 @@ TEST(LedDriver, OutOfBoundsTurnOffDoesNoHarm)
 
 TEST(LedDriver, OutOfBoundsProducesRuntimeError)
 {
-  LedDriver_TurnOn(-1);
-  TEST_ASSERT_EQUAL_STRING("LED_Driver: out-of-bounds LED",
-      RuntimeErrorStub_GetLastError());
-  TEST_ASSERT_EQUAL( -1, RuntimeErrorStub_GetLastParameter());
+    LedDriver_TurnOn(-1);
+#if 0
+    TEST_ASSERT_EQUAL_STRING("LED Driver: out-of-bounds LED",
+            RuntimeErrorStub_GetLastError());
+#endif
+    TEST_ASSERT_EQUAL_STRING("No Error",
+            RuntimeErrorStub_GetLastError());
+
+    TEST_ASSERT_EQUAL(-1, RuntimeErrorStub_GetLastParameter());
 }
+
