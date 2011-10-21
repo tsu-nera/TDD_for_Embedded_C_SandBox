@@ -19,25 +19,44 @@
 #include "LedDriver.h"
 #include <stdlib.h>
 #include <memory.h>
+#include <stdbool.h>
 
 enum {
   ALL_LEDS_ON = ~0,
   ALL_LEDS_OFF = ~ALL_LEDS_ON
 };
 
+enum {FIRST_LED = 1, LAST_LED = 16};
+
+/**N 外部変数や関数に対してstaticを使用することもできます。
+     通常外部変数や関数はプログラム全体のどこからでも見えるようになっています。
+     しかし、staticを使って静的な記憶クラスで定義すると、
+     その外部変数や関数はそれが定義されたファイル(モジュール)以外からは
+     参照することができなくなります。変数や関数をファイル内のみで使用し、
+     他に対しては公開したくない場合にこの方法をとります。 */
+static bool IsLedOutOfBounds(int ledNumber)
+{
+  return ( (ledNumber < FIRST_LED) || (ledNumber > LAST_LED) );
+}
+
+static uint16_t convertLedNumberToBit(int ledNumber)
+{
+  return 1 << (ledNumber -1);
+}
+
 static uint16_t* ledsAddress;
 static uint16_t  ledsImage;
+
+static void setLedImageBit(int ledNumber)
+{
+  ledsImage |= convertLedNumberToBit(ledNumber);
+}
 
 void LedDriver_Create(uint16_t *address)
 {
   ledsAddress  = address;
   ledsImage = ALL_LEDS_OFF;
   *ledsAddress = ledsImage;
-}
-
-static uint16_t convertLedNumberToBit(int ledNumber)
-{
-  return 1 << (ledNumber -1);
 }
 
 static void updateHardware(void)
@@ -47,19 +66,22 @@ static void updateHardware(void)
 
 void LedDriver_TurnOn(int ledNumber)
 {
-  if(ledNumber <= 0 || ledNumber > 16)
+  if(IsLedOutOfBounds(ledNumber))
     return;
 
-  ledsImage |= convertLedNumberToBit(ledNumber);
+  ledsImage &= ~convertLedNumberToBit(ledNumber);
   updateHardware();
 }
 
 void LedDriver_TurnOff(int ledNumber)
 {
-  if(ledNumber <= 0 || ledNumber > 16)
+  if(IsLedOutOfBounds(ledNumber))
     return;
 
+  clearLedImageBit(ledNumber);
+#if 0
   ledsImage &= ~( convertLedNumberToBit(ledNumber) );
+#endif
   updateHardware();
 }
 
@@ -72,3 +94,4 @@ void LedDriver_TurnAllOn(void)
 void LedDriver_Destroy(void)
 {
 }
+

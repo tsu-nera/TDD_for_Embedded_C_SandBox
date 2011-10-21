@@ -123,3 +123,6 @@ TEST(LedDriver, OutOfBoundsProducesRuntimeError)
     TEST_ASSERT_EQUAL(-1, RuntimeErrorStub_GetLastParameter());
 }
 
+IGNORE_TEST(LedDriver, OutOfBoundsToDo){
+  /**N TODO: what should we do during runtime?  */
+}
