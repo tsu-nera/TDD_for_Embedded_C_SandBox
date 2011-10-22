@@ -126,3 +126,10 @@ TEST(LedDriver, OutOfBoundsProducesRuntimeError)
 IGNORE_TEST(LedDriver, OutOfBoundsToDo){
   /**N TODO: what should we do during runtime?  */
 }
+
+//TEST(LedDriver, _IsOn)
+//{
+//  TEST_ASSERT_FALSE(LedDriver_IsOn(11));
+//  LedDriver_TurnOn(11);
+//  TEST_ASSERT_TRUE(LedDriver_IsOn(11));
+//}
