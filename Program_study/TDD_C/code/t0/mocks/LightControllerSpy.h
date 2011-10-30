@@ -29,6 +29,8 @@ typedef enum
 } LightState;
 
 LightState LightControllerSpy_GetLightState(int id);
+/**N なるほど、enumの使い方はこういう戻り値の方法にあったのか！ */
+
 /* END: RememberAllLightStates */
 
 int LightControllerSpy_GetLastId(void);

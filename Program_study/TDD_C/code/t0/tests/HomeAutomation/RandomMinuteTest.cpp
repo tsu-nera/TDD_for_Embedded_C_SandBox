@@ -31,52 +31,52 @@ enum { BOUND=30 };
 
 TEST_GROUP(RandomMinute)
 {
-    int minute;
+		int minute;
 
-    void setup()
-    {
-        RandomMinute_Create(BOUND);
-        srand(1);
-    }
+		void setup()
+		{
+				RandomMinute_Create(BOUND);
+				srand(1);
+		}
 
-    void AssertMinuteIsInRange()
-    {
-        if (minute < -BOUND || minute > BOUND)
-         {
-             printf("bad minute value: %d\n", minute);
-             FAIL("Minute out of range");
-         }
-    }
+		void AssertMinuteIsInRange()
+		{
+				if (minute < -BOUND || minute > BOUND)
+				 {
+						 printf("bad minute value: %d\n", minute);
+						 FAIL("Minute out of range");
+				 }
+		}
 };
 //END: TestGroup
 
 //START: InRange
 TEST(RandomMinute, GetIsInRange)
 {
-    for (int i = 0; i < 100; i++)
-    {
-        minute = RandomMinute_Get();
-        AssertMinuteIsInRange();
-    }
+		for (int i = 0; i < 100; i++)
+		{
+				minute = RandomMinute_Get();
+				AssertMinuteIsInRange();
+		}
 }
 //END: InRange
 
 //START: AllValues
 TEST(RandomMinute, AllValuesPossible)
 {
-    int hit[2*BOUND + 1];
-    memset(hit, 0, sizeof(hit));
+		int hit[2*BOUND + 1];
+		memset(hit, 0, sizeof(hit));
 	int i;
 
-    for (i = 0; i < 300; i++)
-    {
-        minute = RandomMinute_Get();
-        AssertMinuteIsInRange();
-        hit[minute + BOUND]++;
-    }
+		for (i = 0; i < 300; i++)
+		{
+				minute = RandomMinute_Get();
+				AssertMinuteIsInRange();
+				hit[minute + BOUND]++;
+		}
 
-    for (i = 0; i < 2* BOUND + 1; i++) {
-        CHECK(hit[i] > 0);
-    }
+		for (i = 0; i < 2* BOUND + 1; i++) {
+				CHECK(hit[i] > 0);
+		}
 }
 //END: AllValues
