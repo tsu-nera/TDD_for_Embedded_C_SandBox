@@ -21,5 +21,6 @@ void LightController_Off(int id);
 int LightControllerSpy_GetLastId(void);
 int LightControllerSpy_GetLastState(void);
 void LightScheduler_Wakeup(void);
+void LightController_Destroy(void);
 
 #endif /* LIGHTCONTROLLERSPY_H_ */

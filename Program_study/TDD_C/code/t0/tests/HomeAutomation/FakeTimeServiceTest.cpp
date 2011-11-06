@@ -14,13 +14,14 @@ extern "C"
 }
 #include "CppUTest/TestHarness.h"
 
+#if 0
 TEST(FakeTimeService, Create)
 {
 	Time time;
 	TimeService_GetTime(&time);
 
 	LONGS_EQUAL(TIME_UNKNOWN, time.minuteOfDay);
-	LONGS_EQUAL(TIME_UNKNOWN, time.dayOfWeekd);
+	LONGS_EQUAL(TIME_UNKNOWN, time.dayOfWeek);
 }
 
 TEST(FakeTimeService, Set)
@@ -33,15 +34,6 @@ TEST(FakeTimeService, Set)
 	LONGS_EQUAL(TIME_UNKNOWN, time.minuteOfDay);
 	LONGS_EQUAL(TIME_UNKNOWN, time.dayOfWeek);
 }
+#endif
 
-TEST(LightScheduler, NoSheduleNothingHappens)
-{
-	FakeTimeService_SetDay(MONDAY);
-	FakeTimeService_SetMinute(100);
-
-	LightScheduler_Wakeup();
-
-	LONGS_EQUAL(TIME_UNKNOWN, LightControllerSpy_GetLastId());
-	LONGS_EQUAL(TIME_UNKNOWN, LightControllerSpy_GetLastState());
-}
-
+//

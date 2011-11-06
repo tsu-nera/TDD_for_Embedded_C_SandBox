@@ -41,12 +41,14 @@ TEST_GROUP(LightScheduler)
 		void teardown()
 		{
 			LightScheduler_Destroy();
+			LightController_Destroy();
 //       POINTERS_EQUAL(NULL, (void *)FakeTimeSource_GetAlarmCallback());
 		}
 		//END:DestroyCancelsOneMinuteAlarm
 
 };
 
+#if TEST_PATH
 TEST(LightScheduler, CreateDoesNotChangeTheLights)
 {
 		LONGS_EQUAL(LIGHT_ID_UNKNOWN, LightControllerSpy_GetLastId());
@@ -101,6 +103,7 @@ TEST(LightScheduler, WeekdayScheduleIsOperatedOnMonday)
 		LONGS_EQUAL(3, LightControllerSpy_GetLastId());
 		LONGS_EQUAL(LIGHT_ON, LightControllerSpy_GetLastState());
 }
+
 TEST(LightScheduler, ScheduleTwoEventsAtTheSameTIme)
 {
 		LightScheduler_ScheduleTurnOn(3, WEEKDAY, 1200);
@@ -458,6 +461,8 @@ TEST(LightScheduler, ScheduleWeekEndMondayExcluded)
 		LONGS_EQUAL(LIGHT_ID_UNKNOWN, LightControllerSpy_GetLastId());
 		LONGS_EQUAL(LIGHT_STATE_UNKNOWN, LightControllerSpy_GetLastState());
 }
+#endif
+//END: rambleOn-refactored
 
 /**M*********************************/
 /**N ここから自分でソースコード追記 */
@@ -494,9 +499,32 @@ TEST(LightScheduler, RememberTheLightIdControlled)
 	LONGS_EQUAL(LIGHT_ON, LightControllerSpy_GetLastState());
 }
 
+TEST(LightScheduler, NoSheduleNothingHappens)
+{
+	FakeTimeService_SetDay(MONDAY);
+	FakeTimeService_SetMinute(100);
 
+	LightScheduler_Wakeup();
 
-//END: rambleOn-refactored
+	LONGS_EQUAL(LIGHT_ID_UNKNOWN, LightControllerSpy_GetLastId());
+	LONGS_EQUAL(LIGHT_STATE_UNKNOWN, LightControllerSpy_GetLastState());
+}
 
+TEST(LightScheduler, SceduleOnEverydayNotTimeYet)
+{
+	LightScheduler_ScheduleTurnOn(3, EVERYDAY, 1200);
+	FakeTimeService_SetDay(MONDAY);
+	FakeTimeService_SetMinute(1199);
+}
 
+TEST(LightScheduler, ScheduleOnEverydayItsTime)
+{
+	LightScheduler_ScheduleTurnOn(3,EVERYDAY,1200);
+	FakeTimeService_SetDay(MONDAY);
+	FakeTimeService_SetMinute(1200);
 
+	LightScheduler_Wakeup();
+
+	LONGS_EQUAL(3, LightControllerSpy_GetLastId());
+	LONGS_EQUAL(LIGHT_ON, LightControllerSpy_GetLastState());
+}

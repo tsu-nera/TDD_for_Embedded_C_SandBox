@@ -9,6 +9,7 @@
 /**N TDDを実践するためには、こういう虚構の関数を作る必要がある */
 
 #include "LightController.h"
+#include "LightControllerSpy.h"
 
 static int lastId;
 static int lastState;
@@ -42,8 +43,7 @@ int LightControllerSpy_GetLastState(void)
 	return lastState;
 }
 
-
-void LightScheduler_Wakeup(void)
+void LightController_Destroy(void)
 {
 
 }

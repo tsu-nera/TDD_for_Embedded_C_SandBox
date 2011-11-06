@@ -13,7 +13,7 @@ objs/mocks/LightControllerTestSpy.o: mocks/LightControllerTestSpy.cpp \
   ../CppUTest/include/CppUTest/MemoryLeakWarningPlugin.h \
   ../CppUTest/include/CppUTest/TestHarness_c.h \
   ../CppUTest/include/CppUTest/MemoryLeakDetectorNewMacros.h \
-  mocks/LightControllerSpy.h include/HomeAutomation/LightController.h
+  include/HomeAutomation/LightController.h mocks/LightControllerSpy.h
 
 ./../CppUTest/include/CppUTest/MemoryLeakDetectorNewMacros.h:
 
@@ -43,6 +43,6 @@ objs/mocks/LightControllerTestSpy.o: mocks/LightControllerTestSpy.cpp \
 
 ../CppUTest/include/CppUTest/MemoryLeakDetectorNewMacros.h:
 
-mocks/LightControllerSpy.h:
-
 include/HomeAutomation/LightController.h:
+
+mocks/LightControllerSpy.h:

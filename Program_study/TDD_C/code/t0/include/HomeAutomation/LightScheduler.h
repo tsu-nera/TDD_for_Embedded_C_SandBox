@@ -25,6 +25,8 @@
 
 enum  { LS_OK=0, LS_TOO_MANY_EVENTS, LS_ID_OUT_OF_BOUNDS };
 
+#define TEST_PATH 0
+
 void LightScheduler_Create(void);
 void LightScheduler_Destroy(void);
 int LightScheduler_ScheduleTurnOn(int id, Day day, int minuteOfDay);

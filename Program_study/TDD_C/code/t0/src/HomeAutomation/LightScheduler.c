@@ -19,6 +19,7 @@
 
 #include "LightScheduler.h"
 #include "LightController.h"
+#include "LightControllerSpy.h"
 #include "TimeService.h"
 #include "RandomMinute.h"
 #include <stdlib.h>
@@ -32,6 +33,52 @@ enum
 {
 	MAX_EVENTS = 128, UNUSED = -1
 };
+
+typedef struct
+{
+	int id;
+	Day day;
+	int minuteOfDay;
+} ScheduledLightEvent;
+
+static ScheduledLightEvent scheduledEvent;
+
+void LightScheduler_Create(void)
+{
+	scheduledEvent.id = UNUSED;
+}
+
+void LightScheduler_Destroy(void)
+{
+}
+
+int LightScheduler_ScheduleTurnOn(int id, Day day, int minuteOfDay)
+{
+	int i;
+
+	scheduledEvent.id = id;
+	scheduledEvent.minuteOfDay = minuteOfDay;
+
+	i = day;
+
+	return i;
+}
+
+void LightScheduler_Wakeup(void)
+{
+	Time time;
+	TimeService_GetTime(&time);
+
+	if(scheduledEvent.id == UNUSED)
+		return;
+
+	if(time.minuteOfDay != scheduledEvent.minuteOfDay)
+		return;
+
+	LightController_On(scheduledEvent.id);
+}
+
+#if TEST_PATH
 
 typedef struct
 {
@@ -55,9 +102,6 @@ void LightScheduler_Create(void)
 	}
 }
 
-void LightScheduler_Destroy(void)
-{
-}
 
 int LightScheduler_ScheduleTurnOn(int id, Day day, int minuteOfDay)
 {
@@ -105,6 +149,7 @@ int LightScheduler_ScheduleTurnOff(int id, Day day, int minuteOfDay)
 	return LS_TOO_MANY_EVENTS;
 }
 
+
 void LightScheduler_Randomize(int id, Day day, int minuteOfDay)
 {
 	int i;
@@ -132,8 +177,10 @@ void LightScheduler_ScheduleRemove(int id, Day day, int minuteOfDay)
 		}
 	}
 }
+#endif
 
 /* START: NeedsRefactoring1 */
+#if 0
 void LightScheduler_WakeUp(void)
 {
 	int i;
@@ -173,6 +220,8 @@ void LightScheduler_WakeUp(void)
 			}
 		}
 	}
+
 }
+#endif
 /* END: NeedsRefactoring1 */
 

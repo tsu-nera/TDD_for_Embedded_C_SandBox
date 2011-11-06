@@ -21,45 +21,50 @@
 
 extern "C"
 {
+#include "LightController.h"
 #include "LightControllerSpy.h"
 }
 
 TEST_GROUP(LightControllerSpy)
 {
-    void setup()
-    {
-      LightController_Create();
-    }
+		void setup()
+		{
+			LightController_Create();
+		}
 
-    void teardown()
-    {
-       LightController_Destroy();
-    }
+		void teardown()
+		{
+			LightController_Destroy();
+		}
 };
 
+#if 0
 TEST(LightControllerSpy, Create)
 {
-    LONGS_EQUAL(LIGHT_ID_UNKNOWN, LightControllerSpy_GetLastId());
-    LONGS_EQUAL(LIGHT_STATE_UNKNOWN, LightControllerSpy_GetLastState());
+		LONGS_EQUAL(LIGHT_ID_UNKNOWN, LightControllerSpy_GetLastId());
+		LONGS_EQUAL(LIGHT_STATE_UNKNOWN, LightControllerSpy_GetLastState());
 }
 
 TEST(LightControllerSpy, RememberTheLastLightIdControlled)
 {
-    LightController_TurnOn(10);
-    LONGS_EQUAL(10, LightControllerSpy_GetLastId());
-    LONGS_EQUAL(1, LightControllerSpy_GetLastState());
+		LightController_On(10);
+		LONGS_EQUAL(10, LightControllerSpy_GetLastId());
+		LONGS_EQUAL(1, LightControllerSpy_GetLastState());
 }
 //END: original
+#endif
 
+#if 0
 //START: RememberAllLightStates
 TEST(LightControllerSpy, RememberAllLightStates)
 {
-    LONGS_EQUAL(LIGHT_STATE_UNKNOWN, LightControllerSpy_GetLightState(4));
+		LONGS_EQUAL(LIGHT_STATE_UNKNOWN, LightControllerSpy_GetLightState(4));
 
-    LightController_TurnOn(4);
-    LONGS_EQUAL(LIGHT_ON, LightControllerSpy_GetLightState(4));
+		LightController_TurnOn(4);
+		LONGS_EQUAL(LIGHT_ON, LightControllerSpy_GetLightState(4));
 
-    LightController_TurnOff(4);
-    LONGS_EQUAL(LIGHT_OFF, LightControllerSpy_GetLightState(4));
+		LightController_TurnOff(4);
+		LONGS_EQUAL(LIGHT_OFF, LightControllerSpy_GetLightState(4));
 }
 //END: RememberAllLightStates
+#endif

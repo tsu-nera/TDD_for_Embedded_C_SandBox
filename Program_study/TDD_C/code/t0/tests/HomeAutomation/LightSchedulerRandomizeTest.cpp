@@ -26,74 +26,76 @@ extern "C"
 }
 #include "CppUTest/TestHarness.h"
 
-#if 1//START: UT_PTR_SET
+#if TEST_PATH//START: UT_PTR_SET
 TEST_GROUP(LightSchedulerRandomize)
 {
-    void setup()
-    {
-        LightController_Create();
-        LightScheduler_Create();
-        UT_PTR_SET(RandomMinute_Get, FakeRandomMinute_Get);
-    }
+		void setup()
+		{
+				LightController_Create();
+				LightScheduler_Create();
+				UT_PTR_SET(RandomMinute_Get, FakeRandomMinute_Get);
+		}
 
-    void teardown()
-    {
-        LightScheduler_Destroy();
-        LightController_Destroy();
-    }
+		void teardown()
+		{
+				LightScheduler_Destroy();
+				LightController_Destroy();
+		}
 
-    void checkLightState(int id, int level)
-     {
-         if (id == LIGHT_ID_UNKNOWN)
-         {
-             LONGS_EQUAL(id, LightControllerSpy_GetLastId());
-             LONGS_EQUAL(level, LightControllerSpy_GetLastState());
-         }
-         else
-             LONGS_EQUAL(level, LightControllerSpy_GetLightState(id));
-     }
+		void checkLightState(int id, int level)
+		{
+				if (id == LIGHT_ID_UNKNOWN)
+				{
+						LONGS_EQUAL(id, LightControllerSpy_GetLastId());
+						LONGS_EQUAL(level, LightControllerSpy_GetLastState());
+				}
+				else
+						LONGS_EQUAL(level, LightControllerSpy_GetLightState(id));
+		}
 
-    void setTimeTo(int day, int minute)
-    {
-        FakeTimeService_SetDay(day);
-        FakeTimeService_SetMinute(minute);
-    }
+		void setTimeTo(int day, int minute)
+		{
+				FakeTimeService_SetDay(day);
+				FakeTimeService_SetMinute(minute);
+		}
 };
 #endif //END: UT_PTR_SET
 
 //START: EnableRandomize
+#if TEST_PATH
 TEST(LightSchedulerRandomize, TurnsOnEarly)
 {
-    FakeRandomMinute_SetFirstAndIncrement(-10, 5);
-    LightScheduler_ScheduleTurnOn(4, EVERYDAY, 600);
-    LightScheduler_Randomize(4, EVERYDAY, 600);
+		FakeRandomMinute_SetFirstAndIncrement(-10, 5);
+		LightScheduler_ScheduleTurnOn(4, EVERYDAY, 600);
+		LightScheduler_Randomize(4, EVERYDAY, 600);
 
-    setTimeTo(MONDAY, 600-10);
+		setTimeTo(MONDAY, 600-10);
 
-    LightScheduler_WakeUp();
+		LightScheduler_WakeUp();
 
-    checkLightState(4, LIGHT_ON);
+		checkLightState(4, LIGHT_ON);
 }
+#endif
 //END: EnableRandomize
 
 #if 0 //START: manualPtrInitRestore
 TEST_GROUP(LightSchedulerRandomize)
 {
-    int (*savedRandomMinute_Get)();
+		int (*savedRandomMinute_Get)();
 
-    void setup()
-    {
-        LightController_Create();
-        LightScheduler_Create();
-        savedRandomMinute_Get = RandomMinute_Get;
-        RandomMinute_Get = FakeRandomMinute_Get;
-    }
+		void setup()
+		{
+				LightController_Create();
+				LightScheduler_Create();
+				savedRandomMinute_Get = RandomMinute_Get;
+				RandomMinute_Get = FakeRandomMinute_Get;
+		}
 
-    void teardown()
-    {
-        LightScheduler_Destroy();
-        LightController_Destroy();
-        RandomMinute_Get = savedRandomMinute_Get;
-    }
+		void teardown()
+		{
+				LightScheduler_Destroy();
+				LightController_Destroy();
+				RandomMinute_Get = savedRandomMinute_Get;
+		}
 };
 #endif //END: manualPtrInitRestore

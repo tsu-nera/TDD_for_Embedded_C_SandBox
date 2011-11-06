@@ -3,7 +3,7 @@ objs/tests/HomeAutomation/LightSchedulerRandomizeTest.o:  \
   ./../CppUTest/include/CppUTest/MemoryLeakDetectorNewMacros.h \
   ./../CppUTest/include/CppUTest/MemoryLeakDetectorMallocMacros.h \
   include/HomeAutomation/LightScheduler.h include/util/TimeService.h \
-  include/util/common.h mocks/LightControllerSpy.h \
+  include/util/common.h tests/HomeAutomation/LightControllerSpy.h \
   include/HomeAutomation/LightController.h mocks/FakeTimeService.h \
   include/util/TimeService.h mocks/FakeRandomMinute.h \
   include/HomeAutomation/RandomMinute.h \
@@ -30,7 +30,7 @@ include/util/TimeService.h:
 
 include/util/common.h:
 
-mocks/LightControllerSpy.h:
+tests/HomeAutomation/LightControllerSpy.h:
 
 include/HomeAutomation/LightController.h:
 
