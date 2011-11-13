@@ -16,15 +16,21 @@
 //-    www.renaissancesoftware.net james@renaissancesoftware.net      
 //- ------------------------------------------------------------------
 
+#include "CppUTest/TestHarness.h"
 
 extern "C"
 {
 #include "LightScheduler.h"
 #include "LightControllerSpy.h"
 #include "FakeTimeService.h"
-#include "FakeRandomMinute.h"
+//#include "FakeRandomMinute.h"
 }
-#include "CppUTest/TestHarness.h"
+
+enum
+{
+	LIGHT_ID_UNKNOWN_D = -1, LIGHT_STATE_UNKNOWN_D = -1,
+	LIGHT_OFF_D = 0, LIGHT_ON_D = 1
+};
 
 
 TEST_GROUP(LightScheduler)
@@ -476,27 +482,25 @@ TEST(LightScheduler, SchedulerOnEverydayNotTimeYet)
 
 	LightScheduler_Wakeup();
 
-	LONGS_EQUAL(LIGHT_ID_UNKNOWN, LightControllerSpy_GetLastId());
-	LONGS_EQUAL(LIGHT_STATE_UNKNOWN, LightControllerSpy_GetLastState());
 }
 
 TEST(LightScheduler, NoChangeToxLightsDuringInitialization)
 {
-	LONGS_EQUAL(LIGHT_ID_UNKNOWN, LightControllerSpy_GetLastId());
-	LONGS_EQUAL(LIGHT_STATE_UNKNOWN, LightControllerSpy_GetLastState());
+	LONGS_EQUAL(LIGHT_ID_UNKNOWN_D, LightControllerSpy_GetLastId());
+	LONGS_EQUAL(LIGHT_STATE_UNKNOWN_D, LightControllerSpy_GetLastState());
 }
 
 TEST(LightScheduler, Create)
 {
-	LONGS_EQUAL(LIGHT_ID_UNKNOWN, LightControllerSpy_GetLastId());
-	LONGS_EQUAL(LIGHT_STATE_UNKNOWN, LightControllerSpy_GetLastState());
+	LONGS_EQUAL(LIGHT_ID_UNKNOWN_D, LightControllerSpy_GetLastId());
+	LONGS_EQUAL(LIGHT_STATE_UNKNOWN_D, LightControllerSpy_GetLastState());
 }
 
 TEST(LightScheduler, RememberTheLightIdControlled)
 {
 	LightController_On(10);
 	LONGS_EQUAL(10, LightControllerSpy_GetLastId());
-	LONGS_EQUAL(LIGHT_ON, LightControllerSpy_GetLastState());
+	LONGS_EQUAL(LIGHT_ON_D, LightControllerSpy_GetLastState());
 }
 
 TEST(LightScheduler, NoSheduleNothingHappens)
@@ -506,8 +510,9 @@ TEST(LightScheduler, NoSheduleNothingHappens)
 
 	LightScheduler_Wakeup();
 
-	LONGS_EQUAL(LIGHT_ID_UNKNOWN, LightControllerSpy_GetLastId());
-	LONGS_EQUAL(LIGHT_STATE_UNKNOWN, LightControllerSpy_GetLastState());
+
+	LONGS_EQUAL(LIGHT_ID_UNKNOWN_D, LightControllerSpy_GetLastId());
+	LONGS_EQUAL(LIGHT_STATE_UNKNOWN_D, LightControllerSpy_GetLastState());
 }
 
 TEST(LightScheduler, SceduleOnEverydayNotTimeYet)
@@ -515,6 +520,11 @@ TEST(LightScheduler, SceduleOnEverydayNotTimeYet)
 	LightScheduler_ScheduleTurnOn(3, EVERYDAY, 1200);
 	FakeTimeService_SetDay(MONDAY);
 	FakeTimeService_SetMinute(1199);
+
+	LightScheduler_Wakeup();
+
+	LONGS_EQUAL(LIGHT_ID_UNKNOWN_D, LightControllerSpy_GetLastId());
+	LONGS_EQUAL(LIGHT_STATE_UNKNOWN_D, LightControllerSpy_GetLastState());
 }
 
 TEST(LightScheduler, ScheduleOnEverydayItsTime)
@@ -526,5 +536,6 @@ TEST(LightScheduler, ScheduleOnEverydayItsTime)
 	LightScheduler_Wakeup();
 
 	LONGS_EQUAL(3, LightControllerSpy_GetLastId());
-	LONGS_EQUAL(LIGHT_ON, LightControllerSpy_GetLastState());
+	LONGS_EQUAL(LIGHT_ON_D, LightControllerSpy_GetLastState());
 }
+

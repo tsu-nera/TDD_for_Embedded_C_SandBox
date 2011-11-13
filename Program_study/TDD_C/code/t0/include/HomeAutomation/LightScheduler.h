@@ -25,12 +25,20 @@
 
 enum  { LS_OK=0, LS_TOO_MANY_EVENTS, LS_ID_OUT_OF_BOUNDS };
 
-#define TEST_PATH 0
+#if TEST_PATH
+enum Day {
+	NONE = -1, EVERYDAY=10, WEEKDAY, WEEKEND,
+	SUNDAY=1, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+};
+
+typedef enum Day Day;
+
+#endif
 
 void LightScheduler_Create(void);
 void LightScheduler_Destroy(void);
-int LightScheduler_ScheduleTurnOn(int id, Day day, int minuteOfDay);
-int LightScheduler_ScheduleTurnOff(int id, Day day, int minuteOfDay);
+void LightScheduler_ScheduleTurnOn(int id, Day day, int minuteOfDay);
+void LightScheduler_ScheduleTurnOff(int id, Day day, int minuteOfDay);
 void LightScheduler_Randomize(int id, Day day, int minuteOfDay);
 void LightScheduler_ScheduleRemove(int id, Day day, int minuteOfDay);
 void LightScheduler_WakeUp(void);
