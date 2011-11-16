@@ -473,6 +473,18 @@ TEST(LightScheduler, ScheduleWeekEndMondayExcluded)
 /**M*********************************/
 /**N ここから自分でソースコード追記 */
 /**M*********************************/
+void setTimeTo(int day, int minuteOfDay)
+{
+	FakeTimeService_SetDay(day);
+	FakeTimeService_SetMinute(minuteOfDay);
+}
+
+void checkLightState(int id, int level)
+{
+	LONGS_EQUAL(id, LightControllerSpy_GetLastId());
+	LONGS_EQUAL(level, LightControllerSpy_GetLastState());
+}
+
 TEST(LightScheduler, SchedulerOnEverydayNotTimeYet)
 {
 	LightScheduler_ScheduleTurnOn(3, EVERYDAY, 1200);
@@ -539,3 +551,10 @@ TEST(LightScheduler, ScheduleOnEverydayItsTime)
 	LONGS_EQUAL(LIGHT_ON_D, LightControllerSpy_GetLastState());
 }
 
+TEST(LightScheduler, ScheduleWeekEndMonday)
+{
+	LightScheduler_ScheduleTurnOn(3, WEEKEND, 1200);
+	setTimeTo(MONDAY, 1200);
+	LightScheduler_Wakeup();
+	checkLightState(LIGHT_ID_UNKNOWN_D, LIGHT_STATE_UNKNOWN_D);
+}

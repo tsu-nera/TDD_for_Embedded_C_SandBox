@@ -22,9 +22,9 @@
 
 #include "TimeService.h"
 
+enum {MINUTE_UNKNOWN = -1, DAY_UNKNOWN = -1 };
+
 void FakeTimeService_SetMinute(int);
 void FakeTimeService_SetDay(int);
-
-enum {MINUTE_UNKNOWN = -1, DAY_UNKNOWN = -1 };
 
 #endif  /* D_FakeTimeService_H */
