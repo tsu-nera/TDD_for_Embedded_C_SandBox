@@ -551,10 +551,26 @@ TEST(LightScheduler, ScheduleOnEverydayItsTime)
 	LONGS_EQUAL(LIGHT_ON_D, LightControllerSpy_GetLastState());
 }
 
-TEST(LightScheduler, ScheduleWeekEndMonday)
+TEST(LightScheduler, ScheduleWeekEndItsMonday)
 {
 	LightScheduler_ScheduleTurnOn(3, WEEKEND, 1200);
 	setTimeTo(MONDAY, 1200);
+	LightScheduler_Wakeup();
+	checkLightState(LIGHT_ID_UNKNOWN_D, LIGHT_STATE_UNKNOWN_D);
+}
+
+TEST(LightScheduler, SceduleTuesdayAndItsTuesday)
+{
+	LightScheduler_ScheduleTurnOn(3, TUESDAY, 1200);
+	setTimeTo(TUESDAY, 1200);
+	LightScheduler_Wakeup();
+	checkLightState(3, LIGHT_ON_D);
+}
+
+TEST(LightScheduler, ScheduleWeekEndItsFriday)
+{
+	LightScheduler_ScheduleTurnOn(3, WEEKEND, 1200);
+	setTimeTo(FRIDAY, 1200);
 	LightScheduler_Wakeup();
 	checkLightState(LIGHT_ID_UNKNOWN_D, LIGHT_STATE_UNKNOWN_D);
 }

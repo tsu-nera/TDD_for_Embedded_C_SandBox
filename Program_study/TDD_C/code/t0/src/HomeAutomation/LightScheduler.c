@@ -58,8 +58,7 @@ static void scheduleEvent(int id, Day day, int minuteOfDay, int event)
 	scheduledEvent.minuteOfDay = minuteOfDay;
 	scheduledEvent.event = event;
 	scheduledEvent.id = id;
-
-	day = 0;
+	scheduledEvent.day = day;
 }
 
 void LightScheduler_ScheduleTurnOn(int id, Day day, int minuteOfDay)
@@ -84,7 +83,12 @@ void LightScheduler_Wakeup(void)
 
 static void processEventDuenow(Time *time, ScheduledLightEvent *lightEvent)
 {
+	int reactionDay = lightEvent->day;
+
 	if(lightEvent->id == UNUSED)
+		return;
+
+	if(reactionDay != EVERYDAY && reactionDay != today)
 		return;
 
 	if(lightEvent->minuteOfDay != time->minuteOfDay)

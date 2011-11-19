@@ -16,10 +16,14 @@
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
 
+
+#if TEST_PATH
+
 #include "LightControllerSpy.h"
 #include "memory.h"
 
-#if TEST_PATH
+
+
 static int lastId;
 static int lastLevel;
 static int count;
@@ -83,16 +87,17 @@ LightState LightControllerSpy_GetLightState(int id)
 #endif
 
 #if 0
+
 /* START: initial */
-#include "LightController.h"
+#include "LightControllerSpy.h"
 
 static int lastId; 
-static int lastLevel;
+static int lastState;
 
 void LightController_Create(void) 
 {
 		lastId = -1;
-		lastLevel = -1;
+		lastState = -1;
 }
 
 void LightController_Destroy(void)
@@ -102,13 +107,13 @@ void LightController_Destroy(void)
 void LightController_TurnOn(int id) 
 {
 		lastId = id;
-		lastLevel = 1;
+		lastState = 1;
 }
 
 void LightController_TurnOff(int id) 
 {
 		lastId = id;
-		lastLevel = 0;
+		lastState = 0;
 }
 
 int LightControllerSpy_GetLastId(void) 
@@ -118,9 +123,9 @@ int LightControllerSpy_GetLastId(void)
 
 int LightControllerSpy_GetLastState(void)
 {
-		return lastLevel;
+		return lastState;
 }
+#endif
 
 /* END: initial */
 
-#endif

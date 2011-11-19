@@ -9,7 +9,6 @@
 /**N にアクセスするためのインターフェース                      */
 /**N TDDを実践するためには、こういう虚構の関数を作る必要がある */
 
-#include "LightController.h"
 #include "LightControllerSpy.h"
 
 static int lastId;
