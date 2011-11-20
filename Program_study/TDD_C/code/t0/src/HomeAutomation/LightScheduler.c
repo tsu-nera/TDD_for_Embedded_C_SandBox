@@ -86,14 +86,66 @@ static void scheduleEvent(int id, Day day, int minuteOfDay, int event)
 	scheduledEvent.id = id;
 }
 
-void LightScheduler_ScheduleTurnOn(int id, Day day, int minuteOfDay)
+#if 0
+int LightScheduler_ScheduleTurnOn(int id, Day day, int minuteOfDay)
 {
-	scheduleEvent(id, day, minuteOfDay, TURN_ON);
+	int i;
+
+	if (id < 0 || id >= MAX_LIGHTS)
+		return LS_ID_OUT_OF_BOUNDS;
+
+	for (i = 0; i < MAX_EVENTS; i++)
+	{
+		if (eventList[i].id == UNUSED)
+		{
+			eventList[i].id = id;
+			eventList[i].day = day;
+			eventList[i].minuteOfDay = minuteOfDay;
+			eventList[i].event = TURN_ON;
+			eventList[i].randomize = RANDOM_OFF;
+			eventList[i].randomMinutes = 0;
+			return LS_OK;
+		}
+	}
+	return LS_TOO_MANY_EVENTS;
 }
 
-void LightScheduler_ScheduleTurnOff(int id, Day day, int minuteOfDay)
+int LightScheduler_ScheduleTurnOff(int id, Day day, int minuteOfDay)
+{
+	int i;
+
+	if (id < 0 || id >= MAX_LIGHTS)
+		return LS_ID_OUT_OF_BOUNDS;
+
+	for (i = 0; i < MAX_EVENTS; i++)
+	{
+		if (eventList[i].id == UNUSED)
+		{
+			eventList[i].id = id;
+			eventList[i].day = day;
+			eventList[i].minuteOfDay = minuteOfDay;
+			eventList[i].event = TURN_OFF;
+			eventList[i].randomize = RANDOM_OFF;
+			eventList[i].randomMinutes = 0;
+			return LS_OK;
+		}
+	}
+	return LS_TOO_MANY_EVENTS;
+}
+#endif
+
+/**N この２つの関数は戻り値を返さなければいけないけれど */
+/**N とりあえず、後回しで */
+int LightScheduler_ScheduleTurnOn(int id, Day day, int minuteOfDay)
+{
+	scheduleEvent(id, day, minuteOfDay, TURN_ON);
+	return 0;
+}
+
+int LightScheduler_ScheduleTurnOff(int id, Day day, int minuteOfDay)
 {
 	scheduleEvent(id, day, minuteOfDay, TURN_OFF);
+	return 0;
 }
 
 static int DoesLightRespondToday(Time *time, int reactionDay)

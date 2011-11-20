@@ -26,7 +26,40 @@ extern "C"
 #include <stdio.h>
 }
 
+enum{ BOUND=30 };
+
+TEST_GROUP(RandomMinute)
+{
+	int minute;
+
+	void setup()
+	{
+		RandomMinute_Create(BOUND);
+		srand(1);
+	}
+
+	void AssertMinuteIsInRange()
+	{
+		if(minute < -BOUND || minute > BOUND)
+		{
+			/**N さて困った。printfすら通らない */
+			printf("bad minute value:%d\n", minute);
+			FAIL("Minute out of range");
+		}
+	}
+};
+
+
+TEST(RandomMinute, GetIsInRange)
+{
+	for(int i = 0; i < 100; i++){
+		minute = RandomMinute_Get();
+		AssertMinuteIsInRange();
+	}
+}
+
 //START: TestGroup
+#if TEST_PATH
 enum { BOUND=30 };
 
 TEST_GROUP(RandomMinute)
@@ -42,10 +75,10 @@ TEST_GROUP(RandomMinute)
 		void AssertMinuteIsInRange()
 		{
 				if (minute < -BOUND || minute > BOUND)
-				 {
-						 printf("bad minute value: %d\n", minute);
-						 FAIL("Minute out of range");
-				 }
+				{
+						printf("bad minute value: %d\n", minute);
+						FAIL("Minute out of range");
+				}
 		}
 };
 //END: TestGroup
@@ -80,3 +113,4 @@ TEST(RandomMinute, AllValuesPossible)
 		}
 }
 //END: AllValues
+#endif
