@@ -9,7 +9,6 @@ extern "C"
 {
 #include "LightScheduler.h"
 #include "LightControllerSpy.h"
-#include "FakeTimeService.h"
 #include "FakeRandomMinute.h"
 }
 #include "CppUTest/TestHarness.h"

@@ -43,22 +43,47 @@ typedef struct
 } ScheduledLightEvent;
 
 static ScheduledLightEvent scheduledEvent;
+static ScheduledLightEvent scheduledEvents[MAX_EVENTS];
 
 void LightScheduler_Create(void)
 {
+	int i;
+
 	scheduledEvent.id = UNUSED;
+
+	for(i = 0; i < MAX_EVENTS; i++)
+		scheduledEvents[i].id = UNUSED;
+
+	TimeService_SetPeriodicAlarmInSeconds(60,
+			LightScheduler_Wakeup);
 }
 
 void LightScheduler_Destroy(void)
 {
+	TimeService_CancelPeriodicAlarmInSeconds(60,
+			LightScheduler_Wakeup);
 }
 
 static void scheduleEvent(int id, Day day, int minuteOfDay, int event)
 {
+	int i;
+
+	for(i = 0; i < MAX_EVENTS; i++)
+	{
+		if(scheduledEvents[i].id == UNUSED)
+		{
+			scheduledEvents[i].day = day;
+			scheduledEvents[i].minuteOfDay = minuteOfDay;
+			scheduledEvents[i].event = event;
+			scheduledEvents[i].id = id;
+			break;
+		}
+	}
+
+	scheduledEvent.day = day;
 	scheduledEvent.minuteOfDay = minuteOfDay;
 	scheduledEvent.event = event;
 	scheduledEvent.id = id;
-	scheduledEvent.day = day;
 }
 
 void LightScheduler_ScheduleTurnOn(int id, Day day, int minuteOfDay)
@@ -71,30 +96,20 @@ void LightScheduler_ScheduleTurnOff(int id, Day day, int minuteOfDay)
 	scheduleEvent(id, day, minuteOfDay, TURN_OFF);
 }
 
-static void operateLight(ScheduledLightEvent *lightEvent);
-static void processEventDuenow(Time *time, ScheduledLightEvent *lightEvent);
-void LightScheduler_Wakeup(void)
+static int DoesLightRespondToday(Time *time, int reactionDay)
 {
-	Time time;
-	TimeService_GetTime(&time);
+	int today = time->dayOfWeek;
 
-	processEventDuenow(&time, &scheduledEvent);
-}
+	if(reactionDay == EVERYDAY)
+		return TRUE;
+	if(reactionDay == today)
+		return TRUE;
+	if(reactionDay == WEEKEND && (SATURDAY == today || SUNDAY == today))
+		return TRUE;
+	if(reactionDay == WEEKDAY && today >= MONDAY && today <= FRIDAY)
+		return TRUE;
 
-static void processEventDuenow(Time *time, ScheduledLightEvent *lightEvent)
-{
-	int reactionDay = lightEvent->day;
-
-	if(lightEvent->id == UNUSED)
-		return;
-
-	if(reactionDay != EVERYDAY && reactionDay != today)
-		return;
-
-	if(lightEvent->minuteOfDay != time->minuteOfDay)
-		return;
-
-	operateLight(lightEvent);
+	return FALSE;
 }
 
 static void operateLight(ScheduledLightEvent *lightEvent)
@@ -103,6 +118,32 @@ static void operateLight(ScheduledLightEvent *lightEvent)
 		LightController_On(lightEvent->id);
 	else if(lightEvent->event == TURN_OFF)
 		LightController_Off(lightEvent->id);
+}
+
+static void processEventDuenow(Time *time, ScheduledLightEvent *lightEvent)
+{
+	if(lightEvent->id == UNUSED)
+		return;
+	if(!DoesLightRespondToday(time, lightEvent->day))
+		return;
+	if(lightEvent->minuteOfDay != time->minuteOfDay)
+		return;
+
+	operateLight(lightEvent);
+}
+
+void LightScheduler_Wakeup(void)
+{
+	int i;
+	Time time;
+	TimeService_GetTime(&time);
+
+	for(i=0; i<MAX_EVENTS; i++)
+	{
+		processEventDuenow(&time, &scheduledEvents[i] );
+	}
+
+	processEventDuenow(&time, &scheduledEvent);
 }
 
 #if TEST_PATH

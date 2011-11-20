@@ -23,6 +23,7 @@ extern "C"
 #include "LightScheduler.h"
 #include "LightControllerSpy.h"
 #include "FakeTimeService.h"
+#include "TimeService.h"
 //#include "FakeRandomMinute.h"
 }
 
@@ -481,8 +482,13 @@ void setTimeTo(int day, int minuteOfDay)
 
 void checkLightState(int id, int level)
 {
-	LONGS_EQUAL(id, LightControllerSpy_GetLastId());
-	LONGS_EQUAL(level, LightControllerSpy_GetLastState());
+	if(id == LIGHT_ID_UNKNOWN_D)
+	{
+		LONGS_EQUAL(id, LightControllerSpy_GetLastId());
+		LONGS_EQUAL(level, LightControllerSpy_GetLastState());
+	}
+	else
+		LONGS_EQUAL(level, LightControllerSpy_GetLightState(id));
 }
 
 TEST(LightScheduler, SchedulerOnEverydayNotTimeYet)
@@ -551,14 +557,6 @@ TEST(LightScheduler, ScheduleOnEverydayItsTime)
 	LONGS_EQUAL(LIGHT_ON_D, LightControllerSpy_GetLastState());
 }
 
-TEST(LightScheduler, ScheduleWeekEndItsMonday)
-{
-	LightScheduler_ScheduleTurnOn(3, WEEKEND, 1200);
-	setTimeTo(MONDAY, 1200);
-	LightScheduler_Wakeup();
-	checkLightState(LIGHT_ID_UNKNOWN_D, LIGHT_STATE_UNKNOWN_D);
-}
-
 TEST(LightScheduler, SceduleTuesdayAndItsTuesday)
 {
 	LightScheduler_ScheduleTurnOn(3, TUESDAY, 1200);
@@ -573,4 +571,64 @@ TEST(LightScheduler, ScheduleWeekEndItsFriday)
 	setTimeTo(FRIDAY, 1200);
 	LightScheduler_Wakeup();
 	checkLightState(LIGHT_ID_UNKNOWN_D, LIGHT_STATE_UNKNOWN_D);
+}
+
+TEST(LightScheduler, ScheduleWeekEndItsSaturday)
+{
+	LightScheduler_ScheduleTurnOn(3, WEEKEND, 1200);
+	setTimeTo(SATURDAY, 1200);
+	LightScheduler_Wakeup();
+	checkLightState(3, LIGHT_ON_D);
+}
+
+TEST(LightScheduler, ScheduleWeekEndItsSunday)
+{
+	LightScheduler_ScheduleTurnOn(3, WEEKEND, 1200);
+	setTimeTo(SUNDAY, 1200);
+	LightScheduler_Wakeup();
+	checkLightState(3, LIGHT_ON_D);
+}
+
+TEST(LightScheduler, ScheduleWeekEndItsMonday)
+{
+	LightScheduler_ScheduleTurnOn(3, WEEKEND, 1200);
+	setTimeTo(MONDAY, 1200);
+	LightScheduler_Wakeup();
+	checkLightState(LIGHT_ID_UNKNOWN_D, LIGHT_STATE_UNKNOWN_D);
+}
+
+TEST_GROUP(LightSchedulerInitAndCleanup)
+{
+};
+
+#if TEST_PATH
+/**N FakeTimeSource_GetAlarmCallback なんて関数、どこにもない！ */
+TEST(LightSchedulerInitAndCleanup, CreateStartsOneMinuteAlarm)
+{
+	LightScheduler_Create();
+	POINTERS_EQUAL((void *)LightScheduler_Wakeup,
+								(void *)FakeTimeSource_GetAlarmCallback());
+	LONGS_EQUAL(60, FakeTimeSource_GetAlarmPeriod());
+	LightScheduler_Destroy();
+}
+
+TEST(LightSchedulerInitAndCleanup, DestroyCancelsOneMinuteAlarm)
+{
+	LightScheduler_Create();
+	LightScheduler_Destroy();
+	POINTERS_EQUAL(NULL, (void *)FakeTimeSource_GetAlarmCallback());
+}
+#endif
+
+TEST(LightScheduler, ScheduleTwoEventsAtTheSameTime)
+{
+	LightScheduler_ScheduleTurnOn(3, SUNDAY, 1200);
+	LightScheduler_ScheduleTurnOn(12, SUNDAY, 1200);
+
+	setTimeTo(SUNDAY, 1200);
+
+	LightScheduler_Wakeup();
+
+	checkLightState(3, LIGHT_ON_D);
+	checkLightState(12, LIGHT_ON_D);
 }

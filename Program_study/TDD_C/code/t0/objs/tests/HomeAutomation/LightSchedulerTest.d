@@ -14,10 +14,12 @@ objs/tests/HomeAutomation/LightSchedulerTest.o:  \
   ../CppUTest/include/CppUTest/MemoryLeakWarningPlugin.h \
   ../CppUTest/include/CppUTest/TestHarness_c.h \
   ../CppUTest/include/CppUTest/MemoryLeakDetectorNewMacros.h \
-  include/HomeAutomation/LightScheduler.h include/util/TimeService.h \
-  include/util/common.h tests/HomeAutomation/LightControllerSpy.h \
-  include/HomeAutomation/LightController.h mocks/FakeTimeService.h \
-  include/util/TimeService.h
+  include/HomeAutomation/LightScheduler.h \
+  include/HomeAutomation/TimeService.h include/util/common.h \
+  tests/HomeAutomation/LightControllerSpy.h \
+  include/HomeAutomation/LightController.h \
+  tests/HomeAutomation/FakeTimeService.h \
+  include/HomeAutomation/TimeService.h
 
 ./../CppUTest/include/CppUTest/MemoryLeakDetectorNewMacros.h:
 
@@ -49,7 +51,7 @@ objs/tests/HomeAutomation/LightSchedulerTest.o:  \
 
 include/HomeAutomation/LightScheduler.h:
 
-include/util/TimeService.h:
+include/HomeAutomation/TimeService.h:
 
 include/util/common.h:
 
@@ -57,6 +59,6 @@ tests/HomeAutomation/LightControllerSpy.h:
 
 include/HomeAutomation/LightController.h:
 
-mocks/FakeTimeService.h:
+tests/HomeAutomation/FakeTimeService.h:
 
-include/util/TimeService.h:
+include/HomeAutomation/TimeService.h:

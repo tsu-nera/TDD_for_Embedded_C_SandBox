@@ -20,6 +20,7 @@ void LightController_On(int id);
 void LightController_Off(int id);
 int LightControllerSpy_GetLastId(void);
 int LightControllerSpy_GetLastState(void);
+int LightControllerSpy_GetLightState(int id);
 void LightScheduler_Wakeup(void);
 void LightController_Destroy(void);
 

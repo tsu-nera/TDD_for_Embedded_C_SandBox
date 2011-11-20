@@ -2,10 +2,12 @@ objs/tests/HomeAutomation/LightSchedulerRandomizeTest.o:  \
  tests/HomeAutomation/LightSchedulerRandomizeTest.cpp \
   ./../CppUTest/include/CppUTest/MemoryLeakDetectorNewMacros.h \
   ./../CppUTest/include/CppUTest/MemoryLeakDetectorMallocMacros.h \
-  include/HomeAutomation/LightScheduler.h include/util/TimeService.h \
-  include/util/common.h tests/HomeAutomation/LightControllerSpy.h \
-  include/HomeAutomation/LightController.h mocks/FakeTimeService.h \
-  include/util/TimeService.h mocks/FakeRandomMinute.h \
+  include/HomeAutomation/LightScheduler.h \
+  include/HomeAutomation/TimeService.h include/util/common.h \
+  tests/HomeAutomation/LightControllerSpy.h \
+  include/HomeAutomation/LightController.h \
+  tests/HomeAutomation/FakeTimeService.h \
+  include/HomeAutomation/TimeService.h mocks/FakeRandomMinute.h \
   include/HomeAutomation/RandomMinute.h \
   ../CppUTest/include/CppUTest/TestHarness.h \
   ../CppUTest/include/CppUTest/Utest.h \
@@ -26,7 +28,7 @@ objs/tests/HomeAutomation/LightSchedulerRandomizeTest.o:  \
 
 include/HomeAutomation/LightScheduler.h:
 
-include/util/TimeService.h:
+include/HomeAutomation/TimeService.h:
 
 include/util/common.h:
 
@@ -34,9 +36,9 @@ tests/HomeAutomation/LightControllerSpy.h:
 
 include/HomeAutomation/LightController.h:
 
-mocks/FakeTimeService.h:
+tests/HomeAutomation/FakeTimeService.h:
 
-include/util/TimeService.h:
+include/HomeAutomation/TimeService.h:
 
 mocks/FakeRandomMinute.h:
 
